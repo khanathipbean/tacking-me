@@ -1,17 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Plus, ChevronRight, FolderKanban, Tag, ArrowLeft } from "lucide-react";
 import type { Task, Project, Category } from "@/types";
 import { taskService } from "@/services/task-service";
 import { projectService } from "@/services/project-service";
 import { categoryService } from "@/services/category-service";
 import { PageHeader } from "@/components/shared/page-header";
+import { SearchInput } from "@/components/shared/search-input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskTable } from "./task-table";
 import { TaskFormDialog } from "./task-form-dialog";
 import { TaskDeleteDialog } from "./task-delete-dialog";
+import { TaskFilters, type TaskFilterValues } from "./task-filters";
 
 type ViewState =
   | { level: "projects" }
@@ -28,6 +30,16 @@ export function TaskList() {
   const [formOpen, setFormOpen] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [deleteTask, setDeleteTask] = useState<Task | null>(null);
+  const [projectSearch, setProjectSearch] = useState("");
+  const [filters, setFilters] = useState<TaskFilterValues>({
+    search: "",
+    projectId: "",
+    categoryId: "",
+    status: "",
+    priority: "",
+    startDate: "",
+    endDate: "",
+  });
 
   const fetchMeta = useCallback(async () => {
     try {
@@ -108,6 +120,28 @@ export function TaskList() {
     setFormOpen(true);
   }
 
+  const filteredProjects = useMemo(() => {
+    if (!projectSearch) return projects;
+    const s = projectSearch.toLowerCase();
+    return projects.filter(
+      (p) => p.name.toLowerCase().includes(s) || p.description?.toLowerCase().includes(s)
+    );
+  }, [projects, projectSearch]);
+
+  const filteredTasks = tasks.filter((task) => {
+    if (filters.search) {
+      const s = filters.search.toLowerCase();
+      if (!task.title.toLowerCase().includes(s) && !task.description?.toLowerCase().includes(s)) return false;
+    }
+    if (filters.projectId && task.project_id !== filters.projectId) return false;
+    if (filters.categoryId && task.category_id !== filters.categoryId) return false;
+    if (filters.status && task.status !== filters.status) return false;
+    if (filters.priority && task.priority !== filters.priority) return false;
+    if (filters.startDate && (!task.end_date || task.end_date < filters.startDate)) return false;
+    if (filters.endDate && (!task.start_date || task.start_date > filters.endDate)) return false;
+    return true;
+  });
+
   function handleSuccess() {
     if (view.level === "tasks") {
       fetchTasks(view.project.id, view.category?.id);
@@ -165,8 +199,16 @@ export function TaskList() {
 
       {/* Project cards */}
       {view.level === "projects" && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => {
+        <>
+          <div className="w-[200px]">
+            <SearchInput
+              value={projectSearch}
+              onChange={setProjectSearch}
+              placeholder="Find projects..."
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredProjects.map((project) => {
             const projectTaskCount = categories
               .filter((c) => c.project_id === project.id).length;
             return (
@@ -200,7 +242,8 @@ export function TaskList() {
               </button>
             );
           })}
-        </div>
+          </div>
+        </>
       )}
 
       {/* Category cards */}
@@ -257,12 +300,19 @@ export function TaskList() {
         </div>
       )}
 
-      {/* Task table */}
+      {/* Task filters & table */}
       {view.level === "tasks" && (
         <>
+          <TaskFilters
+            filters={filters}
+            onChange={setFilters}
+            projects={projects}
+            categories={categories}
+          />
+
           {tasksLoading ? (
             <Skeleton className="h-96 w-full rounded-xl" />
-          ) : tasks.length === 0 ? (
+          ) : filteredTasks.length === 0 ? (
             <div className="flex h-40 flex-col items-center justify-center rounded-xl border border-dashed text-center">
               <p className="text-sm text-muted-foreground">No tasks found</p>
               <Button variant="outline" size="sm" className="mt-3" onClick={handleCreate}>
@@ -273,7 +323,7 @@ export function TaskList() {
           ) : (
             <div className="rounded-xl border bg-card shadow-sm">
               <TaskTable
-                tasks={tasks}
+                tasks={filteredTasks}
                 projects={projects}
                 categories={categories}
                 onEdit={handleEdit}
@@ -288,6 +338,8 @@ export function TaskList() {
         open={formOpen}
         onOpenChange={setFormOpen}
         task={editTask}
+        defaultProjectId={view.level === "tasks" ? view.project.id : undefined}
+        defaultCategoryId={view.level === "tasks" && view.category ? view.category.id : undefined}
         onSuccess={handleSuccess}
       />
 

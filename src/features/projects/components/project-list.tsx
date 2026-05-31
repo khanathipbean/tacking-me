@@ -86,7 +86,7 @@ export function ProjectList() {
       </PageHeader>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="flex-1">
+        <div className="w-[200px]">
           <SearchInput
             value={search}
             onChange={setSearch}

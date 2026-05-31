@@ -28,6 +28,7 @@ type TaskFormDialogProps = {
   onOpenChange: (open: boolean) => void;
   task?: Task | null;
   defaultProjectId?: string;
+  defaultCategoryId?: string;
   onSuccess: () => void;
 };
 
@@ -36,6 +37,7 @@ export function TaskFormDialog({
   onOpenChange,
   task,
   defaultProjectId,
+  defaultCategoryId,
   onSuccess,
 }: TaskFormDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +61,7 @@ export function TaskFormDialog({
       priority: task?.priority ?? "MEDIUM",
       status: task?.status ?? "DRAFT",
       project_id: task?.project_id ?? defaultProjectId ?? "",
-      category_id: task?.category_id ?? null,
+      category_id: task?.category_id ?? defaultCategoryId ?? null,
       start_date: task?.start_date ?? null,
       end_date: task?.end_date ?? null,
     },
@@ -91,12 +93,12 @@ export function TaskFormDialog({
         priority: task?.priority ?? "MEDIUM",
         status: task?.status ?? "DRAFT",
         project_id: task?.project_id ?? defaultProjectId ?? "",
-        category_id: task?.category_id ?? null,
+        category_id: task?.category_id ?? defaultCategoryId ?? null,
         start_date: task?.start_date ?? null,
         end_date: task?.end_date ?? null,
       });
     }
-  }, [open, task, defaultProjectId, reset]);
+  }, [open, task, defaultProjectId, defaultCategoryId, reset]);
 
   async function onSubmit(data: TaskFormValues) {
     if (!user) return;
