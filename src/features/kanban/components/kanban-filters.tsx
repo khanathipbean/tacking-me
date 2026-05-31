@@ -55,7 +55,7 @@ export function KanbanFilters({
         <select
           value={filters.projectId}
           onChange={(e) => updateFilter("projectId", e.target.value)}
-          className="h-8 rounded-md border border-input bg-background px-2.5 text-sm text-foreground/80 shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-8 w-[140px] rounded-md border border-input bg-background px-2.5 text-sm text-foreground/80 shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         >
           <option value="">All</option>
           {projects.map((p) => (
@@ -71,7 +71,7 @@ export function KanbanFilters({
         <select
           value={filters.categoryId}
           onChange={(e) => updateFilter("categoryId", e.target.value)}
-          className="h-8 rounded-md border border-input bg-background px-2.5 text-sm text-foreground/80 shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-8 w-[140px] rounded-md border border-input bg-background px-2.5 text-sm text-foreground/80 shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         >
           <option value="">All</option>
           {filteredCategories.map((c) => (
@@ -87,7 +87,7 @@ export function KanbanFilters({
         <select
           value={filters.priority}
           onChange={(e) => updateFilter("priority", e.target.value)}
-          className="h-8 rounded-md border border-input bg-background px-2.5 text-sm text-foreground/80 shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-8 w-[140px] rounded-md border border-input bg-background px-2.5 text-sm text-foreground/80 shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         >
           <option value="">All</option>
           <option value="LOW">Low</option>

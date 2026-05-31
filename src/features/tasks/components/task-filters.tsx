@@ -72,7 +72,7 @@ export function TaskFilters({
           onChange={(e) =>
             onChange({ ...filters, projectId: e.target.value, categoryId: "" })
           }
-          className="h-8 rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-8 w-[140px] rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         >
           <option value="">All</option>
           {projects.map((p) => (
@@ -88,7 +88,7 @@ export function TaskFilters({
         <select
           value={filters.categoryId}
           onChange={(e) => onChange({ ...filters, categoryId: e.target.value })}
-          className="h-8 rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-8 w-[140px] rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
           disabled={!filters.projectId}
         >
           <option value="">All</option>
@@ -105,7 +105,7 @@ export function TaskFilters({
         <select
           value={filters.status}
           onChange={(e) => onChange({ ...filters, status: e.target.value })}
-          className="h-8 rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-8 w-[140px] rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         >
           <option value="">All</option>
           <option value="DRAFT">Draft</option>
@@ -120,7 +120,7 @@ export function TaskFilters({
         <select
           value={filters.priority}
           onChange={(e) => onChange({ ...filters, priority: e.target.value })}
-          className="h-8 rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-8 w-[140px] rounded-md border border-input bg-background px-2.5 text-sm shadow-sm transition-colors hover:border-ring focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         >
           <option value="">All</option>
           <option value="LOW">Low</option>

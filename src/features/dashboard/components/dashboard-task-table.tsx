@@ -25,17 +25,17 @@ const priorityOrder = { URGENT: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
 const statusOrder = { IN_PROGRESS: 0, DRAFT: 1, DONE: 2, CANCEL: 3 };
 
 const priorityStyles: Record<string, string> = {
-  LOW: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
-  MEDIUM: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
-  HIGH: "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
-  URGENT: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+  LOW: "bg-slate-100 text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700",
+  MEDIUM: "bg-blue-50 text-blue-600 ring-1 ring-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:ring-blue-700",
+  HIGH: "bg-orange-50 text-orange-600 ring-1 ring-orange-200 dark:bg-orange-900 dark:text-orange-300 dark:ring-orange-700",
+  URGENT: "bg-red-50 text-red-600 ring-1 ring-red-200 dark:bg-red-900 dark:text-red-300 dark:ring-red-700",
 };
 
 const statusStyles: Record<string, string> = {
-  DRAFT: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-  IN_PROGRESS: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
-  DONE: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-  CANCEL: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+  DRAFT: "bg-gray-50 text-gray-600 ring-1 ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700",
+  IN_PROGRESS: "bg-amber-50 text-amber-600 ring-1 ring-amber-200 dark:bg-amber-900 dark:text-amber-300 dark:ring-amber-700",
+  DONE: "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200 dark:bg-emerald-900 dark:text-emerald-300 dark:ring-emerald-700",
+  CANCEL: "bg-red-50 text-red-500 ring-1 ring-red-200 dark:bg-red-900 dark:text-red-300 dark:ring-red-700",
 };
 
 const statusLabels: Record<string, string> = {
@@ -122,7 +122,7 @@ export function DashboardTaskTable({
         cell: ({ row }) => {
           const priority = row.getValue("priority") as string;
           return (
-            <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${priorityStyles[priority] ?? ""}`}>
+            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${priorityStyles[priority] ?? ""}`}>
               {priority}
             </span>
           );
@@ -149,7 +149,7 @@ export function DashboardTaskTable({
         cell: ({ row }) => {
           const status = row.getValue("status") as string;
           return (
-            <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${statusStyles[status] ?? ""}`}>
+            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${statusStyles[status] ?? ""}`}>
               {statusLabels[status] ?? status}
             </span>
           );
@@ -195,25 +195,25 @@ export function DashboardTaskTable({
 
   if (tasks.length === 0) {
     return (
-      <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
+      <div className="flex h-40 items-center justify-center rounded-lg border bg-card text-sm text-muted-foreground shadow-sm">
         No tasks found
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <div className="rounded-lg border bg-card shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b bg-muted/30">
+              <tr key={headerGroup.id} className="border-b border-border/50 bg-muted/40">
                 {headerGroup.headers.map((header) => {
                   const hideOnMobile = (header.column.columnDef.meta as { hideOnMobile?: boolean })?.hideOnMobile;
                   return (
                     <th
                       key={header.id}
-                      className={`px-4 py-3 text-left text-xs font-medium text-muted-foreground ${hideOnMobile ? "hidden md:table-cell" : ""}`}
+                      className={`px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 ${hideOnMobile ? "hidden md:table-cell" : ""}`}
                     >
                       {header.isPlaceholder
                         ? null
@@ -224,9 +224,9 @@ export function DashboardTaskTable({
               </tr>
             ))}
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border/40">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border-b last:border-0 transition-colors hover:bg-muted/20">
+              <tr key={row.id} className="transition-colors hover:bg-muted/30">
                 {row.getVisibleCells().map((cell) => {
                   const hideOnMobile = (cell.column.columnDef.meta as { hideOnMobile?: boolean })?.hideOnMobile;
                   return (
@@ -245,9 +245,12 @@ export function DashboardTaskTable({
       </div>
 
       {table.getPageCount() > 1 && (
-        <div className="flex items-center justify-between px-4 pb-3">
+        <div className="flex items-center justify-between border-t border-border/50 px-4 py-3">
           <span className="text-xs text-muted-foreground">
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+            <span className="ml-2 text-muted-foreground/60">
+              ({tasks.length} {tasks.length === 1 ? "task" : "tasks"})
+            </span>
           </span>
           <div className="flex gap-1">
             <Button
@@ -255,16 +258,18 @@ export function DashboardTaskTable({
               size="sm"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
+              className="h-7 w-7 p-0"
             >
-              <ChevronLeft className="h-3 w-3" />
+              <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
+              className="h-7 w-7 p-0"
             >
-              <ChevronRight className="h-3 w-3" />
+              <ChevronRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

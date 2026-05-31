@@ -56,7 +56,13 @@ export function MobileNav() {
                       : "text-muted-foreground"
                   )}
                 >
-                  <item.icon className="h-4 w-4" />
+                  {item.iconUrl ? (
+                    <img src={item.iconUrl} alt="" className="h-5 w-5" />
+                  ) : item.emoji ? (
+                    <span className="text-base">{item.emoji}</span>
+                  ) : item.icon ? (
+                    <item.icon className="h-4 w-4" />
+                  ) : null}
                   <span>{item.title}</span>
                 </Link>
               );

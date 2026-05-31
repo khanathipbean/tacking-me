@@ -1,10 +1,3 @@
-import {
-  LayoutDashboard,
-  FolderKanban,
-  CheckSquare,
-  Columns3,
-  Settings,
-} from "lucide-react";
 import { type SidebarNavItem } from "@/types/nav";
 
 export const siteConfig = {
@@ -16,26 +9,31 @@ export const sidebarNavItems: SidebarNavItem[] = [
   {
     title: "Dashboard",
     href: "/dashboard",
-    icon: LayoutDashboard,
+    iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4ca.png",
   },
   {
     title: "Projects",
     href: "/projects",
-    icon: FolderKanban,
+    iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4c2.png",
   },
   {
     title: "Tasks",
     href: "/tasks",
-    icon: CheckSquare,
+    iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2705.png",
   },
   {
     title: "Board",
     href: "/board",
-    icon: Columns3,
+    iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f5c2.png",
+  },
+  {
+    title: "Notes",
+    href: "/notes",
+    iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4dd.png",
   },
   {
     title: "Settings",
     href: "/settings",
-    icon: Settings,
+    iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2699.png",
   },
 ];

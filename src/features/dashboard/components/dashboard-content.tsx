@@ -17,6 +17,7 @@ import { CalendarListView } from "@/features/calendar/components/calendar-list-v
 import { TaskDetailDialog } from "@/features/calendar/components/task-detail-dialog";
 import { DashboardSkeleton } from "./dashboard-skeleton";
 import { DashboardError } from "./dashboard-error";
+import { DashboardTaskTable } from "./dashboard-task-table";
 
 export function DashboardContent() {
   const [data, setData] = useState<DashboardData | null>(null);
@@ -236,6 +237,16 @@ export function DashboardContent() {
             />
           </div>
         ) : null}
+      </div>
+
+      {/* Task List Table */}
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold">Tasks</h2>
+        <DashboardTaskTable
+          tasks={filteredTasks}
+          projects={data.projects}
+          categories={data.categories}
+        />
       </div>
 
       {/* Task Detail Dialog */}

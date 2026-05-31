@@ -67,7 +67,13 @@ export function Sidebar() {
                       />
                     }
                   >
-                    <item.icon className="h-4 w-4 shrink-0" />
+                    {item.iconUrl ? (
+                      <img src={item.iconUrl} alt="" className="h-5 w-5 shrink-0" />
+                    ) : item.emoji ? (
+                      <span className="text-base">{item.emoji}</span>
+                    ) : item.icon ? (
+                      <item.icon className="h-4 w-4 shrink-0" />
+                    ) : null}
                   </TooltipTrigger>
                   <TooltipContent side="right">{item.title}</TooltipContent>
                 </Tooltip>
@@ -86,7 +92,13 @@ export function Sidebar() {
                     : "text-sidebar-foreground/70"
                 )}
               >
-                <item.icon className="h-4 w-4 shrink-0" />
+                {item.iconUrl ? (
+                  <img src={item.iconUrl} alt="" className="h-5 w-5 shrink-0" />
+                ) : item.emoji ? (
+                  <span className="text-base shrink-0">{item.emoji}</span>
+                ) : item.icon ? (
+                  <item.icon className="h-4 w-4 shrink-0" />
+                ) : null}
                 <span>{item.title}</span>
                 {item.badge && (
                   <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-medium text-primary-foreground">
