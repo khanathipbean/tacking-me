@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import {
   format,
   startOfMonth,
@@ -48,6 +48,22 @@ export function CalendarMonthView({
   tasks,
   onSelectTask,
 }: CalendarMonthViewProps) {
+  const [morePopup, setMorePopup] = useState<{ day: Date; tasks: Task[]; x: number; y: number } | null>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  // Close popup on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+        setMorePopup(null);
+      }
+    }
+    if (morePopup) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [morePopup]);
+
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
@@ -173,7 +189,7 @@ export function CalendarMonthView({
                   return (
                     <div
                       key={day.toISOString()}
-                      className={`p-2 transition-colors ${
+                      className={`relative p-2 transition-colors ${
                         !isCurrentMonth ? "opacity-30" : ""
                       } ${today ? "bg-primary/10 ring-1 ring-inset ring-primary/30 rounded-lg" : ""}`}
                       style={{ height: `${rowHeight}px` }}
@@ -191,12 +207,32 @@ export function CalendarMonthView({
                         </span>
                       </div>
 
-                      {/* +N more indicator */}
-                      {colIndex === 0 && hiddenCount > 0 && (
-                        <div className="absolute bottom-2 left-2 text-[9px] text-muted-foreground">
-                          +{hiddenCount} more
-                        </div>
-                      )}
+                      {/* +N more indicator per day */}
+                      {(() => {
+                        const dayStr = format(day, "yyyy-MM-dd");
+                        // Get tasks on this specific day that are hidden
+                        const hiddenTasksForDay = bars
+                          .filter((b) => {
+                            if (b.row < maxVisible) return false;
+                            const tStart = b.task.start_date ?? b.task.end_date!;
+                            const tEnd = b.task.end_date ?? b.task.start_date!;
+                            return dayStr >= tStart && dayStr <= tEnd;
+                          })
+                          .map((b) => b.task);
+                        if (hiddenTasksForDay.length === 0) return null;
+                        return (
+                          <button
+                            type="button"
+                            className="absolute bottom-1 left-1/2 -translate-x-1/2 rounded px-1.5 py-0.5 text-[9px] font-medium text-primary hover:bg-primary/10 transition-colors"
+                            onClick={(e) => {
+                              const rect = (e.target as HTMLElement).getBoundingClientRect();
+                              setMorePopup({ day, tasks: hiddenTasksForDay, x: rect.left, y: rect.bottom + 4 });
+                            }}
+                          >
+                            +{hiddenTasksForDay.length} more
+                          </button>
+                        );
+                      })()}
                     </div>
                   );
                 })}
@@ -246,6 +282,45 @@ export function CalendarMonthView({
           );
         })}
       </div>
+
+      {/* More popup */}
+      {morePopup && (
+        <div
+          ref={popupRef}
+          className="fixed z-50 min-w-[200px] max-w-[280px] rounded-lg border bg-card p-3 shadow-lg"
+          style={{ left: `${morePopup.x}px`, top: `${morePopup.y}px` }}
+        >
+          <div className="mb-2 text-xs font-semibold text-foreground">
+            {format(morePopup.day, "MMM d, yyyy")}
+          </div>
+          <div className="space-y-1 max-h-[200px] overflow-y-auto">
+            {morePopup.tasks.map((task) => {
+              const barColor =
+                task.priority === "URGENT" && task.status !== "DONE"
+                  ? "bg-red-400"
+                  : task.status === "DONE"
+                  ? "bg-green-400"
+                  : task.status === "IN_PROGRESS"
+                  ? "bg-amber-400"
+                  : "bg-blue-400";
+              return (
+                <button
+                  key={task.id}
+                  type="button"
+                  onClick={() => {
+                    setMorePopup(null);
+                    onSelectTask(task);
+                  }}
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs transition-colors hover:bg-muted"
+                >
+                  <div className={`h-2 w-2 shrink-0 rounded-full ${barColor}`} />
+                  <span className="truncate font-medium">{task.title}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Legend */}
       <div className="flex flex-wrap gap-3 border-t px-4 py-3 text-[10px] text-muted-foreground">
