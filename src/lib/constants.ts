@@ -32,6 +32,11 @@ export const sidebarNavItems: SidebarNavItem[] = [
     iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4dd.png",
   },
   {
+    title: "Users",
+    href: "/users",
+    iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f465.png",
+  },
+  {
     title: "Settings",
     href: "/settings",
     iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2699.png",
