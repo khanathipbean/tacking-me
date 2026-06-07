@@ -1,1 +1,1 @@
-export { AddUserForm } from "./components/add-user-form";
+export { UserManagement } from "./components/add-user-form";

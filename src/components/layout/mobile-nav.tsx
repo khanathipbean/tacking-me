@@ -43,6 +43,7 @@ export function MobileNav() {
           <nav className="flex flex-col gap-1 px-3">
             {sidebarNavItems.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
@@ -56,13 +57,7 @@ export function MobileNav() {
                       : "text-muted-foreground"
                   )}
                 >
-                  {item.iconUrl ? (
-                    <img src={item.iconUrl} alt="" className="h-5 w-5" />
-                  ) : item.emoji ? (
-                    <span className="text-base">{item.emoji}</span>
-                  ) : item.icon ? (
-                    <item.icon className="h-4 w-4" />
-                  ) : null}
+                  {Icon && <Icon className="h-5 w-5" />}
                   <span>{item.title}</span>
                 </Link>
               );

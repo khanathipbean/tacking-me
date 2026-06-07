@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/shared/page-header";
-import { AddUserForm } from "@/features/users";
+import { UserManagement } from "@/features/users";
 
 export default function UsersPage() {
   return (
@@ -8,9 +8,7 @@ export default function UsersPage() {
         heading="Users"
         description="Create and manage user accounts"
       />
-      <div className="max-w-md">
-        <AddUserForm />
-      </div>
+      <UserManagement />
     </div>
   );
 }
