@@ -161,10 +161,11 @@ export function KanbanBoard() {
     try {
       await taskService.update(taskId, { status: targetStatus });
       toast.success(`Task moved to ${KANBAN_COLUMNS.find((c) => c.id === targetStatus)?.title}`);
-    } catch {
+    } catch (err) {
       // Rollback
       setTasks(previousTasks);
-      toast.error("Failed to update task status. Changes reverted.");
+      const message = err instanceof Error ? err.message : "Failed to update task status";
+      toast.error(`${message}. Changes reverted.`);
     }
   }
 

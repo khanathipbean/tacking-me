@@ -34,3 +34,17 @@ BEGIN
     EXECUTE 'CREATE POLICY "Authenticated users can view all notes" ON notes FOR SELECT USING (auth.role() = ''authenticated'')';
   END IF;
 END $$;
+
+-- ============================================================
+-- Allow all authenticated users to UPDATE/DELETE tasks
+-- ============================================================
+DROP POLICY IF EXISTS "Users can update own tasks" ON tasks;
+CREATE POLICY "Authenticated users can update all tasks"
+  ON tasks FOR UPDATE
+  USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Users can delete own tasks" ON tasks;
+CREATE POLICY "Authenticated users can delete all tasks"
+  ON tasks FOR DELETE
+  USING (auth.role() = 'authenticated');

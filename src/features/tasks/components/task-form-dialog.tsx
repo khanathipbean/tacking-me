@@ -127,8 +127,9 @@ export function TaskFormDialog({
       reset();
       onOpenChange(false);
       onSuccess();
-    } catch {
-      toast.error(isEditing ? "Failed to update task" : "Failed to create task");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : isEditing ? "Failed to update task" : "Failed to create task";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
